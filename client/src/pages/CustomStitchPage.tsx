@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SewingMachine from "@/components/SewingMachine";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -104,199 +105,220 @@ export default function CustomStitchPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-2xl">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="font-display text-3xl font-bold mb-2">Custom Stitch</h1>
-        <p className="text-sm text-muted-foreground mb-8">
-          Get your outfit tailored to perfection
-        </p>
-
-        {/* Steps indicator */}
-        <div className="flex items-center gap-2 mb-10">
-          {steps.map((s, i) => (
-            <div key={s} className="flex items-center gap-2 flex-1">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${
-                  i < step
-                    ? "bg-primary text-primary-foreground"
-                    : i === step
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground"
-                }`}
-              >
-                {i < step ? <Check className="h-4 w-4" /> : i + 1}
-              </div>
-              {i < steps.length - 1 && (
-                <div
-                  className={`flex-1 h-0.5 ${i < step ? "bg-primary" : "bg-border"}`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Step Content */}
+    <div className="container mx-auto px-4 py-4 md:py-8 max-w-6xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        {/* Left Column: Sewing Machine Image */}
         <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="min-h-[300px]"
+          className="hidden lg:block sticky top-12"
         >
-          {step === 0 && (
-            <Form {...form}>
-              <form className="grid grid-cols-2 gap-4">
-                {(
-                  [
-                    "bust",
-                    "waist",
-                    "hip",
-                    "shoulder",
-                    "armLength",
-                    "height",
-                  ] as const
-                ).map((field) => (
-                  <FormField
-                    key={field}
-                    control={form.control}
-                    name={field}
-                    render={({ field: f }) => (
-                      <FormItem>
-                        <FormLabel className="capitalize text-sm">
-                          {field === "armLength" ? "Arm Length" : field}{" "}
-                          (inches)
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="number" {...f} className="rounded-xl" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </form>
-            </Form>
-          )}
+          <SewingMachine />
+        </motion.div>
 
-          {step === 1 && (
-            <div className="space-y-4">
-              <h3 className="font-display text-lg font-semibold">
-                Select Design Style
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {designStyles.map((style) => (
-                  <button
-                    key={style}
-                    onClick={() => setDesignStyle(style)}
-                    className={`p-4 rounded-xl border text-sm text-left transition-colors ${
-                      designStyle === style
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    {style}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* Right Column: Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-card p-6 md:p-8 rounded-3xl border border-border shadow-sm"
+        >
+          <h1 className="font-display text-3xl font-bold mb-2">
+            Custom Stitch
+          </h1>
+          <p className="text-sm text-muted-foreground mb-8">
+            Get your outfit tailored to perfection
+          </p>
 
-          {step === 2 && (
-            <div className="space-y-4">
-              <h3 className="font-display text-lg font-semibold">
-                Upload Reference Image (Optional)
-              </h3>
-              <label className="block border-2 border-dashed border-border rounded-xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors">
-                {referenceImage ? (
-                  <img
-                    src={referenceImage}
-                    alt="Reference"
-                    className="max-h-48 mx-auto rounded-lg"
+          {/* Steps indicator */}
+          <div className="flex items-center gap-2 mb-10">
+            {steps.map((s, i) => (
+              <div key={s} className="flex items-center gap-2 flex-1">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${
+                    i < step
+                      ? "bg-primary text-primary-foreground"
+                      : i === step
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-muted-foreground"
+                  }`}
+                >
+                  {i < step ? <Check className="h-4 w-4" /> : i + 1}
+                </div>
+                {i < steps.length - 1 && (
+                  <div
+                    className={`flex-1 h-0.5 ${i < step ? "bg-primary" : "bg-border"}`}
                   />
-                ) : (
-                  <div className="space-y-2 text-muted-foreground">
-                    <Upload className="h-8 w-8 mx-auto" />
-                    <p className="text-sm">Click to upload a reference image</p>
-                    <p className="text-xs">PNG, JPG up to 5MB</p>
-                  </div>
                 )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageUpload}
-                />
-              </label>
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
 
-          {step === 3 && (
-            <div className="space-y-6">
-              <h3 className="font-display text-lg font-semibold">
-                Review Your Order
-              </h3>
-              <div className="space-y-3 p-4 rounded-xl bg-secondary/50">
-                <h4 className="text-sm font-semibold">Measurements</h4>
-                <div className="grid grid-cols-3 gap-2 text-sm">
-                  {Object.entries(measurements).map(([k, v]) => (
-                    <div key={k}>
-                      <span className="text-muted-foreground capitalize">
-                        {k === "armLength" ? "Arm Length" : k}:
-                      </span>{" "}
-                      <span className="font-medium">{v}"</span>
-                    </div>
+          {/* Step Content */}
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="min-h-[300px]"
+          >
+            {step === 0 && (
+              <Form {...form}>
+                <form className="grid grid-cols-2 gap-4">
+                  {(
+                    [
+                      "bust",
+                      "waist",
+                      "hip",
+                      "shoulder",
+                      "armLength",
+                      "height",
+                    ] as const
+                  ).map((field) => (
+                    <FormField
+                      key={field}
+                      control={form.control}
+                      name={field}
+                      render={({ field: f }) => (
+                        <FormItem>
+                          <FormLabel className="capitalize text-sm">
+                            {field === "armLength" ? "Arm Length" : field}{" "}
+                            (inches)
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              {...f}
+                              className="rounded-xl"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </form>
+              </Form>
+            )}
+
+            {step === 1 && (
+              <div className="space-y-4">
+                <h3 className="font-display text-lg font-semibold">
+                  Select Design Style
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {designStyles.map((style) => (
+                    <button
+                      key={style}
+                      onClick={() => setDesignStyle(style)}
+                      className={`p-4 rounded-xl border text-sm text-left transition-colors ${
+                        designStyle === style
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {style}
+                    </button>
                   ))}
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-secondary/50">
-                <span className="text-sm text-muted-foreground">
-                  Design Style:
-                </span>{" "}
-                <span className="text-sm font-medium">{designStyle}</span>
-              </div>
-              {referenceImage && (
-                <div className="p-4 rounded-xl bg-secondary/50">
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Reference Image:
-                  </p>
-                  <img
-                    src={referenceImage}
-                    alt="Reference"
-                    className="max-h-32 rounded-lg"
-                  />
-                </div>
-              )}
-            </div>
-          )}
-        </motion.div>
+            )}
 
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            className="rounded-xl gap-2"
-            onClick={() => setStep(step - 1)}
-            disabled={step === 0}
-          >
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-          {step < 3 ? (
+            {step === 2 && (
+              <div className="space-y-4">
+                <h3 className="font-display text-lg font-semibold">
+                  Upload Reference Image (Optional)
+                </h3>
+                <label className="block border-2 border-dashed border-border rounded-xl p-12 text-center cursor-pointer hover:border-primary/50 transition-colors">
+                  {referenceImage ? (
+                    <img
+                      src={referenceImage}
+                      alt="Reference"
+                      className="max-h-48 mx-auto rounded-lg"
+                    />
+                  ) : (
+                    <div className="space-y-2 text-muted-foreground">
+                      <Upload className="h-8 w-8 mx-auto" />
+                      <p className="text-sm">
+                        Click to upload a reference image
+                      </p>
+                      <p className="text-xs">PNG, JPG up to 5MB</p>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-6">
+                <h3 className="font-display text-lg font-semibold">
+                  Review Your Order
+                </h3>
+                <div className="space-y-3 p-4 rounded-xl bg-secondary/50">
+                  <h4 className="text-sm font-semibold">Measurements</h4>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    {Object.entries(measurements).map(([k, v]) => (
+                      <div key={k}>
+                        <span className="text-muted-foreground capitalize">
+                          {k === "armLength" ? "Arm Length" : k}:
+                        </span>{" "}
+                        <span className="font-medium">{v}"</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 rounded-xl bg-secondary/50">
+                  <span className="text-sm text-muted-foreground">
+                    Design Style:
+                  </span>{" "}
+                  <span className="text-sm font-medium">{designStyle}</span>
+                </div>
+                {referenceImage && (
+                  <div className="p-4 rounded-xl bg-secondary/50">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Reference Image:
+                    </p>
+                    <img
+                      src={referenceImage}
+                      alt="Reference"
+                      className="max-h-32 rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Navigation */}
+          <div className="flex justify-between mt-8">
             <Button
+              variant="outline"
               className="rounded-xl gap-2"
-              onClick={() => setStep(step + 1)}
-              disabled={!canNext()}
+              onClick={() => setStep(step - 1)}
+              disabled={step === 0}
             >
-              Next <ArrowRight className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" /> Back
             </Button>
-          ) : (
-            <Button className="rounded-xl gap-2" onClick={handleSubmit}>
-              Submit Request <Check className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </motion.div>
+            {step < 3 ? (
+              <Button
+                className="rounded-xl gap-2"
+                onClick={() => setStep(step + 1)}
+                disabled={!canNext()}
+              >
+                Next <ArrowRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button className="rounded-xl gap-2" onClick={handleSubmit}>
+                Submit Request <Check className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

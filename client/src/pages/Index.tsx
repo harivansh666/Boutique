@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import { testimonials } from "@/data/testimonials";
 import { useProductStore } from "@/store/useProduct";
 import { useEffect } from "react";
+import OfferBanners from "@/components/OfferBanners";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -102,6 +103,9 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Offer Banners */}
+      <OfferBanners />
 
       {/* Categories */}
       <section className="py-16 md:py-24">
