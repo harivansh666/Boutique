@@ -6,6 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 // @desc    Create new custom stitch request
 // @route   POST /api/custom-stitch
 // @access  Private
+
 export const createCustomStitchRequest = asyncHandler(
   async (req: Request, res: Response) => {
     const { measurements, designStyle, referenceImage } = req.body;
