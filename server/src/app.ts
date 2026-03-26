@@ -24,7 +24,10 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:8080", "http://127.0.0.1:8080"],
+    origin: [
+      "http://localhost:8080",
+      "https://gleaming-wisp-d4b746.netlify.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
